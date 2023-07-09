@@ -230,3 +230,105 @@ class UIGoods {
 >2. 操作系统的计时函数本身就有少量偏差，由于 JS 的计时器最终调用的是操作系统的函数，也就携带了这些偏差
 >3. 按照 W3C 的标准，浏览器实现计时器时，如果嵌套层级超过 5 层，则会带有 4 毫秒的最少时间，这样在计时时间少于 4 毫秒时又带来了偏差
 >4. 受事件循环的影响，计时器的回调函数只能在主线程空闲时运行，因此又带来了偏差
+
+## promise
+
+### promise
+
+>promise是ES6新发布的一个构造函数，是ES6最重要的新特性之一
+>
+>promise接收一个函数作为参数，函数接收两个参数（resolve, reject）
+>
+>promise实例有三种状态 
+>
+>- pending: 初始状态，既不是成功，也不是失败状态。
+>- fulfilled: 意味着操作成功完成。
+>- rejected: 意味着操作失败。
+>
+>调用resolve()会让promise的状态从pending到fulfilled
+>
+>调用reject()会让promise的状态从pending到rejected
+>
+>then方法里面的任务是微任务
+>
+>resolve()和reject()里面的任务是异步
+
+```js
+const p = new Promise(function(resolve, reject){
+    //做一些异步操作
+   	if(f==1){
+        resolve(); //promise的状态从pending到fulfilled
+    }else{
+        reject()  //promise的状态从pending到rejected
+    }
+});
+```
+
+>promise的实例对象可以调用then()和catch()分别对成功和错误进行处理
+>
+>其中要注意
+>
+>1. then方法必定会返回一个新的Promise
+>2. 新任务的状态败决于后续处理
+>   1. 若没有相关的后续处理，新任务的状态和前任务状态一致，数据为前任务的数据。
+>   2. 若有后续处理但还未执行、新任务挂起。
+>   3. 若后续处理执行了，则根据后续处理的情况确定新任务的状态
+>      - 后续处理执行无错，新任务的状态为完成，数据为后续处理的返回值后续
+>      - 处理执行有错，新任务的状态为失败,数据为异常对象
+>      - 后续执行后返回的是一个任务对象，新任务的状态和数据与该任务对象一致
+
+#### promise的静态方法
+
+##### Promise.resolve()  (reject()同理)
+
+```js
+const p = new Promise.resolve(1);
+
+//相当于
+
+const p1 = new Promise((resolve)=>{
+		resolve(1)
+})
+```
+
+##### Promise.all()
+
+>返回一个任务
+>
+>Promise.all()里面的promise同时运行，并且只有当所有的promise成功它才成功，不然就失败
+
+```js
+Promise.all([
+    Promise.resolve(1),
+    Promise.resolve(2),
+    Promise.resolve(3)  
+])
+```
+
+##### Promise.any()
+
+>只要有一个成功，就成功
+
+##### Promise.race()
+
+>竞速，谁先执行就返回谁的任务
+
+##### Promise.allSetted()
+
+>得到一个每一个promise最后的情况汇总结果
+
+### async和await
+
+>有了Promisc，异步任务就有了一种统一的处理方式
+>有了境一的处理方式，ES官方就可以对其进一步优化
+>ES7推出了两个关键字ssync和swoit ，用于更加优雅的表达Promise
+>
+>
+>
+>async和await
+>
+>解决promise的链式调用和回调地狱
+>
+>1. 被async修饰的函数一定返回Promise
+>2. await表示等待某个promise完成，他必须在async中使用 可以在同步中获取到promise的返回值
+
