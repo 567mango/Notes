@@ -135,3 +135,9 @@ ReactDom.render(div,document.getElementById('root')）
 ```
 
 **重新渲染  效率不会低 我们只是创建了一个对象 而不是修改真实dom 我们的div元素没有改变**
+
+### 组件
+
+>和vue组件一样的概念，方便复用，模块化
+>
+>React组件**首字母**必须**大写**
