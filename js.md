@@ -231,6 +231,136 @@ class UIGoods {
 >3. 按照 W3C 的标准，浏览器实现计时器时，如果嵌套层级超过 5 层，则会带有 4 毫秒的最少时间，这样在计时时间少于 4 毫秒时又带来了偏差
 >4. 受事件循环的影响，计时器的回调函数只能在主线程空闲时运行，因此又带来了偏差
 
+## Object
+
+#### Object.entries()
+
+>Object.entries() 方法返回一个给定对象自身可枚举属性的键值对数组。
+>
+>其排列与使用 `for...in` 循环遍历该对象时返回的顺序一致（区别在于 for-in 循环还会枚举**原型链**中的属性）。
+>
+>`Object.entries()`返回一个数组，其元素是与直接在`object`上找到的可枚举属性键值对相对应的数组。属性的顺序与通过手动**循环对象**的属性值所给出的顺序相同。
+
+```js
+const obj = { name: 'xiaoming', age: '18',sex: 'man'}; 
+const res = Object.entries(obj) 
+console.log(res); 
+/*
+[['name','xiaoming'],['age','18'],['sex','man']]
+*/
+```
+
+#### Object.assign()
+
+>object.assign()主要用于对象合并，将源对象中的属性复制到目标对象中，他将返回目标对象。
+>
+>用法：
+>
+>Object.assign(target, ...sources)
+>
+>参数：target--->目标对象
+>
+>​      source--->源对象
+>
+>返回值：target，目标对象
+
+```js
+
+var target = {name:'带你飞'}
+var source = {age:18}
+var result = Object.assign(target,source)
+console.log(result,target===result); // {name: '带你飞', age: 18} true
+```
+
+>如果只是想将两个或多个对象的属性合并到一起，不改变原有对象的属性，可以用一个空的对象作为target对象。像下面这样：
+
+```js
+var source = {name:'带你飞'}
+var source2 = {age:18}
+var result = Object.assign({},source,source2)
+console.log(result,source===result); // {name: '带你飞', age: 18} false
+```
+
+```js
+var source1 = "abc";
+var source2 = true;
+var source3 = 10;
+
+var result = Object.assign({}, source1, null, source2, undefined, source3); 
+// 原始类型会被包装，null 和 undefined 会被忽略。
+// 注意，只有字符串的包装对象才可能有自身可枚举属性。
+console.log(result); // {0: 'a', 1: 'b', 2: 'c'}
+```
+
+>Object.assign 方法只会拷贝源对象自身的并且可枚举的属性到目标对象。
+
+```js
+var object1 = {
+  a: 1,
+  b: 2,
+  c: 3
+};
+ 
+var object2 = Object.assign({c: 4, d: 5}, object1);
+ 
+console.log(object2.c, object2.d); // 3 5
+console.log(object1)  // { a: 1, b: 2, c: 3 }
+console.log(object2)  // { c: 3, d: 5, a: 1, b: 2 }
+```
+
+>对象的深拷贝
+>
+>深拷贝：深拷贝不会拷贝引用类型的引用，而是将引用类型的值全部拷贝一份，形成一个新的引用类型，这样就不会发生引用错乱的问题，使得我们可以多次使用同样的数据，而不用担心数据之间会起冲突。
+
+```js
+let object1 = {
+		a: 1,
+		b: 2
+	};
+let object2 = Object.assign({}, object1, {
+    b: 20
+});
+
+console.log(object1); // { a: 1, b: 2 }
+console.log(object2); // { a: 1, b: 20 }
+```
+
+>对象的浅拷贝
+>
+>浅拷贝：浅拷贝只是复制了对象的引用地址，两个对象指向同一个内存地址，所以修改其中任意的值，另一个值都会随之变化，这就是浅拷贝
+
+```js
+var object1 = {
+		a: 1,
+		b: {
+			c: 2,
+			d: 3
+		}
+	};
+var object2 = Object.assign({}, object1);
+	object2.a = 10;
+	object2.b.c = 20;
+	console.log(object1); // { a: 1, b: { c: 20, d: 3 } }
+	console.log(object2) //{ a: 10, b: { c: 20, d: 3} }
+```
+
+#### encodeURIComponent() 
+
+>encodeURIComponent() 函数可把字符串作为 URI 组件进行编码。
+>
+>该方法不会对 ASCII 字母和数字进行编码，也不会对这些 ASCII 标点符号进行编码： - _ . ! ~ * ' ( ) 。
+>
+>其他字符（比如 ：;/?:@&=+$,# 这些用于分隔 URI 组件的标点符号），都是由一个或多个十六进制的转义序列替换的。
+
+```js
+var uri="https://www.runoob.com/my test.php?name=ståle&car=saab";
+console.log(encodeURIComponent(uri))
+//
+//https%3A%2F%2Fwww.runoob.com%2Fmy%20test.php%3Fname%3Dst%C3%A5le%26car%3Dsaab
+```
+
+
+
 ## promise
 
 ### promise
