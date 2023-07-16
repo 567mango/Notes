@@ -268,7 +268,7 @@ calss MyClassComp extends React.Compoent{
 >
 >!或许我们可以在组件里面更改引用类型数据里面的数据 但是千万不要这么做 要保证数据只能在数据源那里修改
 
-#### 组件状态
+#### 组件状态  
 
 >组件可以自行维护的数据  (**state**)
 >
@@ -322,9 +322,196 @@ calss MyClassComp extends React.Compoent{
 }
 ```
 
+#### **this.setState({})**
+
 >**this.setState({})**
 >
 >1. 底层是用 Object.assign() 来对state进行混入 覆盖掉原来的状态(相同覆盖，不同无影响)
 >2. 一旦调用 会自动触发重新渲染
 
 **注意**   当组件重新渲染后 它的子组件也都会跟着一起重新渲染
+
+>**this.setState({})**    对状态的改变**可能是异步的**
+>
+>- 如果某个改变状态的代码处于某个**HTML元素的事件**中，则其是异步的，否则是同步
+>
+>  **解决**：避免出错，在**this.setState({})**中使用回调函数获得状态
+>
+>  ```jsx
+>  this.,setState({},()=>{
+>      //在这里获取最新的状态
+>  })
+>  ```
+>
+>- 在事件中同时连续使用setState时改变状态时  会出现状态改变的都是同一个状态，后续状态不能获取最新的状态
+>
+>  **解决**：使用函数的方式得到最新状态
+>
+>  ```jsx
+>  this.,setState(cur=>{
+>      return {
+>          n:cur.n + 1
+>      }
+>  })
+>  ```
+>
+>  1. 参数prev表示当前状态
+>  2. 该函数的返回结果会混合掉之前的状态
+>  3. 该函数是异步执行 （后续改变状态的函数会排列在它之后  就可以拿到最新的状态）
+>
+> **最佳实践**
+>
+>>1. 把所有的setState当作是异步的
+>>2. 永远不信任setState调用之后的状态
+>>3. 使用调用后的状态用回调函数 
+>>4. 如果需要新的状态会根据之前的状态进行运算，使用函数的方式改变状态 
+>
+> 
+>
+>**React会对异步的setState进行优化，将多次的setState进行合并（将多次的状态改变完成后，在统一对state进行改变，然后再出发render)**
+>
+> 此时 **使用调用后的状态用的回调函数**也是会在统一改变后执行 
+>
+>
+
+### 事件
+
+>**其实就是属性  属性传递的是函数...**
+>
+>比如onClick  点击事件
+
+>```jsx
+>finction handleClick(e){
+>    console.log('点击了',e)
+>}
+>
+>const btn = <button onClick={handleClick} onMouseEnter={(e)=>{
+>               console.log('鼠标移入了',e)
+>          }}>点击</button>
+>```
+>
+>事件参数怎么获取呢？
+>
+>直接在函数里面加上参数 e 就可以使用
+
+如果没有特殊处理 **在事件处理函数中 this指向 undfinded**
+
+处理办法
+
+1. 使用bind函数绑定this
+
+   > bind()方法主要就是将函数绑定到某个对象，bind()会创建一个函数赋值给函数体内的this对象的值会被绑定到传入bind()第一个参数的值  如果再后边再传入实参会依次先用实参再依次使用形参
+
+   ```JSX
+   //1.在constructor中调用   
+   constructor(props){
+       super(props)
+       this.xxx  = this.xxx.bind(this)
+   }
+   //2.在传入事件时调用  (效率低 每次重新渲染都会产生新的函数)
+   onClick = {this.xxx  = this.xxx.bind(this)}
+   
+   ```
+
+2. 使用箭头函数
+
+   >箭头函数 **this** 本身就指向外部
+
+   ```jsx
+   //1.在传入事件时函数用箭头函数
+   onClick = {()=>{}}
+   //2.函数定义时不用function  用箭头函数  （这样写xxx不在原型上 而是在对象上）
+   xxx= (()=>{
+   })
+   ```
+
+#### 属性默认值
+
+>使用 **defaultProps**
+>
+>```jsx
+>组件名.defaultProps={
+>    h:5,
+>    z:5,
+>    y:5
+>}
+>```
+>
+>使用了**defaultProps** 之后  
+>
+>1. 函数组件**调用时**会将传入的**props和设置的默认的进行混合**
+>2. 类组件是在调用**constructor()**之前进行混合 （是使用类组件时进行混合，出初始化完成后交给props ,调用构造函数之前就已经混合完成了）
+>
+> 
+>
+> 
+>
+>类组件中也可以使用 **static**关键字进行设置默认值
+>
+>```js
+>static defaultProps{
+>    h:5,
+>    z:5,
+>    y:5
+>}
+>```
+>
+>
+
+#### 属性类型检查 
+
+> `prop-types` : 来自于React官方的库
+>
+>对**组件**使用金静态属性  `propTypes`告知React
+>
+>**isRequired** :必填
+>
+>```jsx
+>xxx组件名.propTypes = {
+>    h:propTypes.number.isRequired
+>    //属性h的必须是number并且必须赋值
+>}
+>//类型太多了~记不过来  后续补 不会上网搜~~~~
+>```
+>
+>**自定义属性检查**
+>
+>属性：
+>
+>1. props ：所有的属性对象
+>2. propName ：当前验证的属性名字
+>3. componentName ： 组件的名称
+>
+>```jsx
+> h:function(props,propName,componentName){
+>     const val = props[propName]
+>     if(val == xxxx){
+>         return newError('xxxxxxx')
+>     }
+>}
+>```
+>
+>
+>
+>
+
+
+
+
+
+
+
+### umi.js
+
+>一个react框架（企业级）
+
+全局安装 `yarn global add umi`
+
+>提供了一个命令行工具:**umi**  ，通过该命令可以对umi工程进行操作
+>
+>umi还可以使用对应的脚手架
+
+- 约定式路由
+
+  >在pages里面的文件会被自动添加到路由  
+
