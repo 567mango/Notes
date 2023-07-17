@@ -371,10 +371,8 @@ calss MyClassComp extends React.Compoent{
 >**React会对异步的setState进行优化，将多次的setState进行合并（将多次的状态改变完成后，在统一对state进行改变，然后再出发render)**
 >
 > 此时 **使用调用后的状态用的回调函数**也是会在统一改变后执行 
->
->
 
-### 事件
+#### 事件
 
 >**其实就是属性  属性传递的是函数...**
 >
@@ -382,12 +380,12 @@ calss MyClassComp extends React.Compoent{
 
 >```jsx
 >finction handleClick(e){
->    console.log('点击了',e)
+>console.log('点击了',e)
 >}
 >
 >const btn = <button onClick={handleClick} onMouseEnter={(e)=>{
->               console.log('鼠标移入了',e)
->          }}>点击</button>
+>          console.log('鼠标移入了',e)
+>     }}>点击</button>
 >```
 >
 >事件参数怎么获取呢？
@@ -425,15 +423,83 @@ calss MyClassComp extends React.Compoent{
    })
    ```
 
+
+
+#### 组件生命周期
+
+>生命周期：组件**从诞生到销毁经历一系列的过程**
+>
+>React在组件的生命周期中提供了一系列的钩子函数（类似于事件），可以让开发者在函数中注入代码，这些代码会在适当的时候去运行
+>
+>**类组件才有生命周期**
+
+##### 旧版生命周期 		<16.0.0
+
+1. 初始化阶段（**constructor**）
+   1. 初始化属性和状态   
+   2. 除非组件被销毁，**同一个组件对象只会创建一次**
+   3. 不能调用 `setState({})`
+2. 组件即将被挂载(**componentWillMount**)（基本不用，新版被砍掉）
+   1. 和构造函数一样 ，只会运行一次
+   2. 可以使用`setState({})` 但是避免bug  不允许使用
+   3. 容易出bug  新版被砍掉
+3. **渲染** （**render**）
+   1. 返回一个虚拟Dom，会被挂载到虚拟DOM树中，最终渲染到页面的真实DOM中
+   2. 严禁调用 setState 会导致无限递归渲染
+   3. **render可以执行多次**，需要重新渲染，就重新运行
+4. **挂载完成** （**componentDidMount**）
+   1. 只会执行一次
+   2. 可以使用setState
+   3. 通常情况下，会将网络请求、启动计时器等一开始需要的操作，书写到该函数中
+5. **更新阶段（下面就是更新阶段的函数了） ⬇**
+6. 接收到新的属性值时（**componentWillReceiveProps(nextProps)**）（基本不用，新版被砍掉）
+   1. 参数为设置的新的属性对象
+   2. 不推荐使用
+7. **是否要重新渲染该组件**（**shouldComponentUpdate(nextProps,nextState)**）
+   1. 指示React是否要重新渲染该组件，通过返回true和false来指定
+   2. 默认情况下，会直接返回true
+   3. 接受两个参数 ，新的属性对象和状态对象
+   4. 可以做性能优化
+8. 组件即将被重新渲染 （**componentWillUpdate**）（基本不用，新版被砍掉）
+9. 渲染**render**(只要组件重新渲染，都会调用render)
+10. 组件已完成渲染(**componentDidUpadate(prevProps,prevState)**)
+    1. 往往在该函数中使用dom操作改变一些元素
+11. **组件被销毁** （**componentWillUnmount**）
+    1. 通常在该函数中销毁一些组件依赖的资源，比如计时器
+
+##### 新版生命周期  		>=16.0.0
+
+>上述表明被砍掉的已经不复存在了
+>
+>**不要让一个组件即来自于属性又来自于状态 **（砍掉componentWillReceiveProps(nextProps)的原因，给了新的getDerivedStateFromProps）
+
+1. 从属性中获取最新的状态 getDerivedStateFromProps
+   1. 通过参数可以获取新的属性和状态
+   2. 该函数时静态的 （不能使用this）
+   3. 该函数的返回值会覆盖掉组件的状态
+   4. 该函数几乎没什么用...........
+2. **获取更新前的快照**  （**getSnapshotBeforeUpdate**）
+   1. 真实的DOM构建完成，但还未真实渲染到页面中（渲染之前）
+   2. 在该函数中，通常用于实现一些附加的dom操作
+   3. 该函数的返回值，会作为 **componentDidUpadate**的第三个参数
+
+#### 传递元素内容
+
+
+
+
+
+
+
 #### 属性默认值
 
 >使用 **defaultProps**
 >
 >```jsx
 >组件名.defaultProps={
->    h:5,
->    z:5,
->    y:5
+>h:5,
+>z:5,
+>y:5
 >}
 >```
 >
@@ -442,17 +508,13 @@ calss MyClassComp extends React.Compoent{
 >1. 函数组件**调用时**会将传入的**props和设置的默认的进行混合**
 >2. 类组件是在调用**constructor()**之前进行混合 （是使用类组件时进行混合，出初始化完成后交给props ,调用构造函数之前就已经混合完成了）
 >
-> 
->
-> 
->
 >类组件中也可以使用 **static**关键字进行设置默认值
 >
 >```js
 >static defaultProps{
->    h:5,
->    z:5,
->    y:5
+>   h:5,
+>   z:5,
+>   y:5
 >}
 >```
 >
@@ -462,38 +524,44 @@ calss MyClassComp extends React.Compoent{
 
 > `prop-types` : 来自于React官方的库
 >
->对**组件**使用金静态属性  `propTypes`告知React
+> 对**组件**使用金静态属性  `propTypes`告知React
 >
->**isRequired** :必填
+> **isRequired** :必填
 >
->```jsx
->xxx组件名.propTypes = {
->    h:propTypes.number.isRequired
->    //属性h的必须是number并且必须赋值
->}
->//类型太多了~记不过来  后续补 不会上网搜~~~~
->```
+> ```jsx
+> xxx组件名.propTypes = {
+> h:propTypes.number.isRequired
+> //属性h的必须是number并且必须赋值
+> }
+> //类型太多了~记不过来  后续补 不会上网搜~~~~
+> ```
 >
->**自定义属性检查**
+> **自定义属性检查**
 >
->属性：
+> 属性：
 >
->1. props ：所有的属性对象
->2. propName ：当前验证的属性名字
->3. componentName ： 组件的名称
+> 1. props ：所有的属性对象
+> 2. propName ：当前验证的属性名字
+> 3. componentName ： 组件的名称
 >
->```jsx
+> ```jsx
 > h:function(props,propName,componentName){
 >     const val = props[propName]
 >     if(val == xxxx){
 >         return newError('xxxxxxx')
 >     }
->}
->```
+> }
+> ```
 >
->
->
->
+> 
+
+
+
+
+
+
+
+
 
 
 
