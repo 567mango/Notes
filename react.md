@@ -1,10 +1,10 @@
-## react
+# **react**
 
-### 认识react
+## 认识react
 
-### 环境配置
+## 环境配置
 
-#### emmet
+## emmet
 
 配置emmet   在设置里面找到配置 添加上 javascript : javascriptreact
 
@@ -27,7 +27,7 @@ ReactDOM.render(<h1>Hello World</h1>,document.getElementById('root'));
 > 1. 显示的东西
 > 2. 容器
 
-#### 插件安装
+### 插件安装
 
 >ESlint  :代码风格检查
 >
@@ -35,7 +35,7 @@ ReactDOM.render(<h1>Hello World</h1>,document.getElementById('root'));
 >
 >（就是规范的快捷代码，之后会有很难多方便的快捷键）
 
-#### 使用脚手架创建react项目
+### 使用脚手架创建react项目
 
 >官方：**create-react-app** 
 >
@@ -47,7 +47,7 @@ ReactDOM.render(<h1>Hello World</h1>,document.getElementById('root'));
 
 
 
-#### Chrome插件安装
+### Chrome插件安装
 
 React Developer Tools
 
@@ -55,9 +55,9 @@ React Developer Tools
 >
 >相当于vue一样的调试工具
 
-### JSX
+## JSX
 
-#### JSX简介
+### JSX简介
 
 >什么是JSX
 >
@@ -82,7 +82,7 @@ React Developer Tools
 >
 >3. 每个JSX元素必须结束（XML规范）  ( / )
 
-#### JSX表达式
+### JSX表达式
 
 >使用 **{}**
 >
@@ -139,7 +139,7 @@ const cls = 'image'
 
 在JSX里面写**注释**需要用 **{/* */}**
 
-#### 元素不可变
+### 元素不可变
 
 >虽然JSX是一个对象 但是元素一旦被创建，就不能能被修改了
 >
@@ -162,17 +162,17 @@ ReactDom.render(div,document.getElementById('root')）
 
 **重新渲染  效率不会低 我们只是创建了一个对象 而不是修改真实dom 我们的div元素没有改变**
 
-### 组件
+## 组件
 
 >和vue组件一样的概念，方便复用，模块化
 >
 >React组件**首字母**必须**大写**
 
-#### 组件类型
+### 组件类型
 
 **有两种使用方式**
 
-- 函数式
+#### 函数式
 
 >直接用function定义函数 返回JSX
 
@@ -190,7 +190,7 @@ ReactDom.render({MyFuncComp()},document.getElementById('root'))
 ReactDom.render(<MyFuncComp/>,document.getElementById('root'))
 ```
 
-- 类组件
+#### 类组件
 
 >使用**class**创建一个类并且用**extends**来继承 ****
 >
@@ -204,63 +204,63 @@ calss MyClassComp extends React.Compoent{
 }
 ```
 
-#### 组件传值
+### 组件传值
 
-- 函数组件
+#### 函数组件传值
 
-  >传递的就是参数
-  >
-  >为了统一一般取名为**props**
-  >
-  >传进来的内容会放在props这个对象中
+>传递的就是参数
+>
+>为了统一一般取名为**props**
+>
+>传进来的内容会放在props这个对象中
 
-  ```jsx
-  
-  //子
-  function MyFuncComp(props){
-      return <h1>组件内容，传递来的数字 ： {props.number}</h1>
-  }
-  
-  //父
-  ReactDom.render(<>
-                  <MyFuncComp number='2' />  //传递的是字符串
-                  <MyFuncComp number={5} />//传递的是数字
-                   <MyFuncComp ennable={true} />//传递的是布尔类型的数据
-                  <MyFuncComp ennable={{name:'wwww'}} />//传递的是对象
-                  </>
-                  ,document.getElementById('root'))
-  
-  ```
+```jsx
 
-- 类组件、
+//子
+function MyFuncComp(props){
+    return <h1>组件内容，传递来的数字 ： {props.number}</h1>
+}
 
-  >传递来的蚕食用构造函数 **constructor**来接受并且调用**super(props)**    
-  >
-  >**super(props)**  相当于调用了  this.props = props  将传递来的对象保存在这个对象里面	
-  
-  ```jsx
-  //子
-  calss MyClassComp extends React.Compoent{
-      constructor(props){
-          super(props) //this.props = props  将传递来的对象保存在这个对象里面
-      }
-      //constructor里面的其实会自动帮我们完成，可以不写
-      render(){
-          return <h1>类组件  {this.props.number}</h1>
-          //用法多了个this
-      }
-  }
-  
-  //父
-  ReactDom.render(<>
-                  <MyClassComp number='2' />  //传递的是字符串
-                  <MyClassComp number={5} />//传递的是数字
-                   <MyClassComp ennable={true} />//传递的是布尔类型的数据
-                  <MyClassComp ennable={{name:'wwww'}} />//传递的是对象
-                  </>
-                  ,document.getElementById('root'))
-  
-  ```
+//父
+ReactDom.render(<>
+                <MyFuncComp number='2' />  //传递的是字符串
+                <MyFuncComp number={5} />//传递的是数字
+                 <MyFuncComp ennable={true} />//传递的是布尔类型的数据
+                <MyFuncComp ennable={{name:'wwww'}} />//传递的是对象
+                </>
+                ,document.getElementById('root'))
+
+```
+
+#### 类组件传值
+
+>传递来的蚕食用构造函数 **constructor**来接受并且调用**super(props)**    
+>
+>**super(props)**  相当于调用了  this.props = props  将传递来的对象保存在这个对象里面	
+
+```jsx
+//子
+calss MyClassComp extends React.Compoent{
+    constructor(props){
+        super(props) //this.props = props  将传递来的对象保存在这个对象里面
+    }
+    //constructor里面的其实会自动帮我们完成，可以不写
+    render(){
+        return <h1>类组件  {this.props.number}</h1>
+        //用法多了个this
+    }
+}
+
+//父
+ReactDom.render(<>
+                <MyClassComp number='2' />  //传递的是字符串
+                <MyClassComp number={5} />//传递的是数字
+                 <MyClassComp ennable={true} />//传递的是布尔类型的数据
+                <MyClassComp ennable={{name:'wwww'}} />//传递的是对象
+                </>
+                ,document.getElementById('root'))
+
+```
 
 >**特别注意** : 组件不能改变自身的属性
 >
@@ -268,7 +268,7 @@ calss MyClassComp extends React.Compoent{
 >
 >!或许我们可以在组件里面更改引用类型数据里面的数据 但是千万不要这么做 要保证数据只能在数据源那里修改
 
-#### 组件状态  
+### 组件状态   State
 
 >组件可以自行维护的数据  (**state**)
 >
@@ -372,7 +372,7 @@ calss MyClassComp extends React.Compoent{
 >
 > 此时 **使用调用后的状态用的回调函数**也是会在统一改变后执行 
 
-#### 事件
+### 事件
 
 >**其实就是属性  属性传递的是函数...**
 >
@@ -425,7 +425,7 @@ calss MyClassComp extends React.Compoent{
 
 
 
-#### 组件生命周期
+### 组件生命周期
 
 >生命周期：组件**从诞生到销毁经历一系列的过程**
 >
@@ -433,7 +433,7 @@ calss MyClassComp extends React.Compoent{
 >
 >**类组件才有生命周期**
 
-##### 旧版生命周期 		<16.0.0
+#### 旧版生命周期 		<16.0.0
 
 1. 初始化阶段（**constructor**）
    1. 初始化属性和状态   
@@ -467,7 +467,7 @@ calss MyClassComp extends React.Compoent{
 11. **组件被销毁** （**componentWillUnmount**）
     1. 通常在该函数中销毁一些组件依赖的资源，比如计时器
 
-##### 新版生命周期  		>=16.0.0
+#### 新版生命周期  		>=16.0.0
 
 >上述表明被砍掉的已经不复存在了
 >
@@ -483,15 +483,32 @@ calss MyClassComp extends React.Compoent{
    2. 在该函数中，通常用于实现一些附加的dom操作
    3. 该函数的返回值，会作为 **componentDidUpadate**的第三个参数
 
-#### 传递元素内容
+### 传递元素内容
+
+>组件可以通过属性传递元素内容
+>
+>Comp内部使用props接收
+>
+>但是这种写法是不怎么符合我们写html的习惯的
+>
+>所以React给我们提供了一种语法糖  写在组件中间的值会被当做 **children**属性进行传递
+
+```jsx
+<Comp html={<h1>我爱前端</h1>} ></Comp>
+
+<Comp>
+	<h1>我爱前端</h1>
+</Comp>
+==
+<Comp children={<h1>我爱前端</h1>}>
+</Comp>  
+```
 
 
 
 
 
-
-
-#### 属性默认值
+### 属性默认值
 
 >使用 **defaultProps**
 >
@@ -520,7 +537,7 @@ calss MyClassComp extends React.Compoent{
 >
 >
 
-#### 属性类型检查 
+### 属性类型检查 
 
 > `prop-types` : 来自于React官方的库
 >
@@ -555,6 +572,67 @@ calss MyClassComp extends React.Compoent{
 >
 > 
 
+## 表单
+
+>受控组件和非受控组件
+>
+>**受控组件**：组建的使用者，有能力完全控制该组件的行为和内容。通常情况下，受控组件往往没有自身的状态，其内容完全收到属性的控制
+>
+>**非受控组件**：组建的使用者，没有能力控制该组件的行为和内容，组件的行为和内容完全自行控制
+>
+>**表单组件默认情况下是非受控组件**
+
+```jsx
+<input value="123" />
+//如果我们这样写 表单的value值是不受控制的，此时我们没办法修改
+//这时react也会给我们警告
+
+//我们可以用过使用State，并且添加onChange事件来将它变为可控的
+
+State = {
+    val:''
+}
+<input value={this.state.val} onChange={e =>{
+        this.state.val = e.target.value
+    }} />
+```
+
+**其余表单元素类同~  （JS主打一个灵活）**
+
+>我们每个表单元素用**onChange** 每次写比较烦人 那么我们可以将onChange里面的函数抽取出来
+
+```jsx
+hanldeChange = e =>{
+    let val = e.target.value   //读取表单的值
+    let name = e.target.name  //读取表单的name属性
+    this.setState({
+        [name]:val
+    })
+}
+//此函数表单（多选框除外）通用~
+
+<input value = {this.state.val} onChange={hanldeChange} />
+
+
+//多选框进行特殊处理
+
+
+hanldeChange = e =>{
+    let val = e.target.value   //读取表单的值
+    let name = e.target.name  //读取表单的name属性
+    if(e.target.type === 'checkbox'){
+        //对val进行特殊处理
+        if(e.target.checked){
+            val = [..this.state.xxx,val]
+        }else{
+            val =this.state.xxx.filter(item => item !== val)
+        }
+    }
+    this.setState({
+        [name]:val
+    })
+}
+```
 
 
 
@@ -562,14 +640,7 @@ calss MyClassComp extends React.Compoent{
 
 
 
-
-
-
-
-
-
-
-### umi.js
+## umi.js
 
 >一个react框架（企业级）
 
