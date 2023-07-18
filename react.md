@@ -372,7 +372,70 @@ calss MyClassComp extends React.Compoent{
 >
 > 此时 **使用调用后的状态用的回调函数**也是会在统一改变后执行 
 
-### 事件
+### Ref 
+
+>1. 直接使用dom元素中的某个方法
+>2. 直接使用自定义组件中的某个方法
+>
+>用法：
+>
+>给组件或者dom元素添加  ref  `ref = ’demo‘`
+>
+>使用 `this.refs.demo.xxx`
+>
+>（上述时字符串赋值，不推荐使用）X
+>
+>- ref**作用于html的组件，得到的是真实的dom**
+>- ref**作用于类组件，得到的是类的实例**
+>- ref**不能作用域函数组件**
+>
+>ref不在推荐使用字符串赋值，字符串赋值的方式将来可能被移除
+>
+>目前，ref推荐使用对象或是函数
+
+#### 对象赋值
+
+>通过 **React.createRef()**  创建一个对象  结构其实就是
+>
+>```jsx
+>{
+>current:xxx,
+>}
+>```
+>    
+>使用 `const demo = React.createRef()  `
+>
+>​		 `ref = 'demo'`
+>
+>​		 `this.demo.current.xxx`
+>
+
+#### 函数赋值 
+
+>
+>使用函数，函数的参数就是dom元素或者类的实例
+>
+>使用`ref = {el => {this.demo = el}}`
+>
+>`this.demo.xxx`
+> 
+>​	**函数的调用事件，什么时候调用**
+>
+>1. **componentDidMount**挂载完成时就可以使用且已被调用
+>2. 如果ref的值发生了变动 （旧的函数被新的函数替代），分别调用旧的函数和新的函数，时间点出现在**componentDidMount**之前
+>  1. 如果我们不想让它调用两次，可以在外边写一个实例方法，给ref一个实例方法，所以每次给ref的都是同一个方法，所以只会在componentDidMount挂载时调用一次
+>3. 如果ref所在的组件被卸载，也会调用一次
+>
+> 
+>
+>**谨慎使用ref，最好使用react的属性啊，状态，来控制页面变化，尽量避免直接操作dom，**
+>
+>**能用属性和状态控制，就不要使用ref**
+>
+>1. 调用真实dom对象中的方法  （音频，视频暂停等...）
+>2. 某个时候需要调用类组件的方法
+
+## 事件
 
 >**其实就是属性  属性传递的是函数...**
 >
@@ -425,7 +488,7 @@ calss MyClassComp extends React.Compoent{
 
 
 
-### 组件生命周期
+## 组件生命周期
 
 >生命周期：组件**从诞生到销毁经历一系列的过程**
 >
@@ -433,7 +496,7 @@ calss MyClassComp extends React.Compoent{
 >
 >**类组件才有生命周期**
 
-#### 旧版生命周期 		<16.0.0
+### 旧版生命周期 		<16.0.0
 
 1. 初始化阶段（**constructor**）
    1. 初始化属性和状态   
@@ -467,7 +530,7 @@ calss MyClassComp extends React.Compoent{
 11. **组件被销毁** （**componentWillUnmount**）
     1. 通常在该函数中销毁一些组件依赖的资源，比如计时器
 
-#### 新版生命周期  		>=16.0.0
+### 新版生命周期  		>=16.0.0
 
 >上述表明被砍掉的已经不复存在了
 >
@@ -634,7 +697,59 @@ hanldeChange = e =>{
 }
 ```
 
+## 高阶组件  **HOC**
 
+>HOF：Higher-Order Function  高阶函数，以函数作为参数，并返回一个函数
+>
+>HOC: Higher-Order Compoent  高阶组件，以组件作为参数，并返回一个组件
+
+```jsx
+function(func){
+    return function(){
+        
+    }
+}
+//高阶函数
+
+export default function withTest(comp){
+    return class  extends React.Component{
+       
+    }
+}
+
+function A(){
+    return <h1>A</h1>
+}
+const B = withTest(A)
+//高阶组件
+```
+
+> **通常可以利用HOC实现横切关注点**
+>
+> #20个组件，每个组件在创建和销毁组件时，需要作日志记录
+>
+> #20个组件，它们需要显示一些内容，得到的数据结构完全一致
+>
+> 一般做功能增强的，一般不做显示
+
+注意
+
+1. 不要在render中使用高阶组件
+2. 不要在高阶组件中更改传入的组件
+
+示例 判断组件是否登录
+
+```jsx
+export default function withLogin(comp){
+    //LoginWrapper.xxxx = xxx
+    return function LoginWrapper(props){
+       if(props.isLogin){
+           return <Comp {...props} />
+       }
+        return null
+    }
+}
+```
 
 
 
