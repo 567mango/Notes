@@ -4,7 +4,7 @@
 
 ## 环境配置
 
-## emmet
+### emmet
 
 配置emmet   在设置里面找到配置 添加上 javascript : javascriptreact
 
