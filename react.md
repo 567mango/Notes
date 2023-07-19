@@ -866,6 +866,121 @@ export default function withLogin(comp){
 }
 ```
 
+## Context 上下文
+
+> 上下文，表示做某一些事情的环境
+>
+> 1. 当某个组件创建了上下文之后，上下文中的数据，会被所有后代组件共享
+> 2. 如果某个组件依赖了上下文，会导致该组件不再纯粹（外部数据进来源于属性props）
+> 3. 一般情况下，用于第三方组件（通用组件）
+
+### 旧版API（了解，后续可能被移除）
+
+只有类组件才可以创建上下文
+
+1. 给类组件书写静态属性  **childContextTypes** 使用该属性对上下文中的数据类型进行约束
+
+2. 添加实例方法 **getChildContext** ，该方法返回的对象，即为上下文中的数据，该数据必须满足类型约束，该方法会在每次**render**之后运行。
+
+   ```jsx
+   //类组件中
+   //使用childContextTypes对上下文中的数据类型进行约束
+   static childContextTypes = {
+       a:PropTypes.number,
+       b:PropTypes.string.isRequired,
+   }
+   
+   //得到上下文中的数据
+   getChildContext(){
+       return {
+           a:123,//this.state.a
+           b:'abcdefg' //this.state.b
+       }
+   }
+   
+   ```
+
+3. 使用上下文中的数据
+
+   1. 如果要是使用上下文中的数据，组件必须有一个静态属性 **contextTypes** ，该属性描述了需要获取的上下文中的数据类型
+   2. 在**constructor**的第二个参数来获取上下文 （或者3）
+   3. 从组件中的**context属性**中获取
+
+   ```jsx
+   //在这里声明需要使用那些上下文的数据
+   static contextTypes = {
+       a:propTypes.number
+   }
+   
+   constructor（props,context){
+       super(props);
+       console.log(context)
+   }
+   
+   //或者
+   constructor（props,context){
+       super(props,context); 
+       console.log(this.context)  //注意这样是this.context
+   }
+   ```
+
+4. 在函数组件中，通过第二个参数获取上下文
+
+   ```jsx
+   function myComp(props,context){
+       return <div>
+       	<h1> {this.context.xxx} </h1>
+       </div>
+   }
+   
+   myComp.contextTypes = {
+       xxx:propTypes.number
+   }
+   ```
+
+5. 上下文的数据变化
+
+   > 上下文中的数据不可以直接变化，最终都是通过状态的改变
+
+   ```jsx
+   getChildContext(){
+       return {
+           a:this.state.a,//this.state.a
+           b:this.state.b //this.state.b
+       }
+   }
+   
+   this.setState({
+       a:this.state.a + 1
+   })
+   //调用setState  会重新运行getChildContext
+   ```
+
+6. 子组件中改变上下文
+
+   > 办法：**在上下文中加入一个一个处理函数**，可以用于后代组件更新上下文的数据
+
+   ```jsx
+   getChildContext(){
+       return {
+           a:this.state.a,//this.state.a
+           b:this.state.b //this.state.b,
+           onChange(newA){
+               this.setState({
+                   a:newA
+               })
+           }
+       }
+   }
+   //子组件调用onChange
+   ```
+
+**数据不管怎样都是从上往下流，不能从下往上流**
+
+### 新版API
+
+
+
 
 
 
