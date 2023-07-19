@@ -435,7 +435,121 @@ calss MyClassComp extends React.Compoent{
 >1. 调用真实dom对象中的方法  （音频，视频暂停等...）
 >2. 某个时候需要调用类组件的方法
 
-## 事件
+#### Ref转发
+
+>**forwardRef**
+>
+>我们在函数组件中时不能使用Ref的（没什么意义），但是我们希望得到组件内部的根元素怎么搞
+
+```jsx
+function A(props,ref){
+    return <h1>组件A</h1>
+}
+```
+
+1. **React.forwardRef**
+   1. 传递时函数组件
+   2. 返回的是一个新的组件
+2. const newA = React.forwardRef(A)
+   1. 如果此时我们用React.createRef()创建一个对象赋值给newA的ref，得到的是null
+   2. 但是会把**ref**通过函数A的**第二个参数（props,ref)**交给A，让自行处理
+3. 然后我们再把这个ref绑定到我们需要转发到的根节点上就可以拿到组件里面的东西了
+
+```jsx
+
+function A(props,ref){
+    return <h1 ref={ref}>组件A</h1>
+}
+
+//父组件
+const NewA = React.forwardRef(A)
+const ARef = React.createRef()
+<NewA ref={ARef}><NewA/>
+
+componentDidMount(){
+    console.log(this.ARef)
+    // 这时拿到的就是A组件里面的 h1
+}
+```
+
+> 类组件中怎么使用
+>
+> 通过一个普通属性传过去，然后组件内部使用props接收，再把这个接收到的ref传给想要获取的元素上边
+
+```jsx
+//子组件
+render(){
+    return <h1 ref={this.props.myfowardRef}>组件A</h1>
+}
+
+//父组件
+
+const ARef = React.createRef()
+
+<A myfowardRef={ARef}><A/>
+
+componentDidMount(){
+    console.log(this.ARef)
+    // 这时拿到的就是A组件里面的 h1
+}
+
+```
+
+**函数组件得通过 React.forwardRef()才能够使用**
+
+```jsx
+//封装使用
+const NewA = React.forwardRef((props,ref)=>{
+return <A {...props} myForwardRef={ref}></A>
+})
+const ARef = React.createRef()
+
+render(){
+    <NewA ref={ARef}></NewA>
+}
+```
+
+**这样我们类组件也能像函数组件一样使用React.forwardRef()**
+
+>forwardRef配合高阶组件获取到我们真实的组件
+
+```jsx
+import {A} from './components/Comps'
+//高阶组件
+import WithLog from './HOC/WithLog'
+const AComp = WithLog(A)
+const myRef = React.createRef()
+render(){
+    return (
+    <div>
+ 		// 1. ref传给高阶组件      
+        <AComp ref={this.myRef} xxx={xxx}></AComp>
+    </div>
+    )
+}
+
+
+//高阶组件内
+render(){
+    //3.结构出来forwardRef和剩余参数， forwardRef代表我们要转发的ref
+    const {forwardRef,...rest} = this.props
+    return (
+    <>
+        //4.接收forwardRef传来的ref给Comp
+    	<Comp ref={forwardRef} {...rest}></Comp>    
+    </>
+    )
+}
+//2.高阶组件拿到使用 React.forwardRef 并且讲ref通过forwardRef 传给 Comp
+return React.forwardRef((props,ref)=>{
+    return <WithLog {...props} forwardRef=(ref)>
+    </WithLog>
+})
+```
+
+
+
+## 事件	
 
 >**其实就是属性  属性传递的是函数...**
 >
@@ -740,6 +854,7 @@ const B = withTest(A)
 示例 判断组件是否登录
 
 ```jsx
+//HOC高级组件
 export default function withLogin(comp){
     //LoginWrapper.xxxx = xxx
     return function LoginWrapper(props){
