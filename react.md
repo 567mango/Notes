@@ -977,13 +977,140 @@ export default function withLogin(comp){
 
 **数据不管怎样都是从上往下流，不能从下往上流**
 
+>上下文取用有点类似于js的作用域链，谁离得近取谁的上下文   
+>
+>A—>B—>C  	如果a，b重复了，那么c优先在b里取
+
 ### 新版API
 
+>旧版API存在效率问题，并且容易导致滥用
+
+**创建上下文**
+
+> **React.createContext()**创建对象
+
+1. 上下文是一个独立于组件的对象
+
+   ```jsx
+   React.createContext({
+       a:5,
+       b:6
+   })
+   ```
+
+   
+
+2. 用React.createContext()创建后，返回的是一个包含两个属性的对象
+
+#### **Provider**
+
+> 一个组件，该组件会创建一个上下文  (生产者)
+
+```jsx
+const ctx = React.createContext({
+    a:5,
+    b:6
+})
+//获取上下文
+const Provider = ctx.Provider;
+
+//使用
+<Provider>
+	
+</Provider>
+
+//也可以直接
+<ctx.Provider>
+
+</ctx.Provider>
+```
+
+>该组件有一个value属性，通过对value进行赋值，从而对数据进行赋值
+>
+>`<Provider value = {this.state}>
+>	
+></Provider>`
+
+**使用上下文中的数据**
+
+> 必须拥有静态属性 **contextType** ，应**赋值为创建的上下文对象**
+
+```jsx
+const ctx = React.createContext({
+    a:5,
+    b:6
+})
+
+const Provider = ctx.Provider;
+
+
+//子组件
+static contextType = ctx;
+
+```
+
+>当有另一个分支也需要用 **Provider**时，应该**提升当前Provider的层级**，而不是用到多个组件中
 
 
 
+#### **Comsumer**
+
+1. 在类组件中，需要使用this.context来获取上下文数据
+
+2. **在函数组件中，需要使用Comsumer来获取上下文数据**
+
+   1. Comsumer是一个组件
+
+   2. 它的子节点，是一个函数（它的props.children需要传递一个函数）
+
+      ```jsx
+      
+      <ctx.Comsumer>
+          //传递的函数会将数据通过函数的参数拿到
+          {value => <>{value.a},{value.b}</>}
+      </ctx.Comsumer>
+      //==    (也就是语法糖嘛)
+      <ctx.Comsumer children = {value => <>{value.a},{value.b}</>}>
+      
+      </ctx.Comsumer>
+      
+      ```
+
+      >  当然类组件也可以这样用 结构清晰
 
 
+
+>这样当出现 A->B->C  时，想要用哪个上下文就直接用哪个上下文的数据，不存在覆盖问题
+>
+>**细节**
+>
+>如果上**下文提供者 （Context.Provider）中的value属性（Object.isvalue()进行比较）发生变化，会导致该上下文提供的所有后代元素全部重新渲染**，无论该子元素是否有优化（无论shouldComponentUpdate函数返回什么结果）强制更新，能够绕过shouldComponentUpdate
+>
+> 
+>
+>但是我们state没有赋新值，只是setState({}) 也会绕过shouldComponentUpdate
+>
+>这样写会导致我们性能优化失效  怎么办呢？
+>
+>可以再套一层 比如
+>
+>```jsx
+>state = {
+>    //将原来的上下文数据放在ctx中
+>    ctx:{
+>         a:5,
+>         b:6
+>    }
+>}
+>
+>// 
+><ctx.Provider value = {this.state.ctx}>
+>
+></ctx.Provider>
+>//这种方式每次的state是不一样的，但是相同情况下，赋值给ctx还是同样的地址，所以会走一个正常的生命周期
+>```
+>
+>
 
 ## umi.js
 
