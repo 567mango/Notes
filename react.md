@@ -1110,7 +1110,113 @@ static contextType = ctx;
 >//这种方式每次的state是不一样的，但是相同情况下，赋值给ctx还是同样的地址，所以会走一个正常的生命周期
 >```
 >
+
+
+
+## PureComponent
+
+> 纯组件，用于避免不必要的渲染（运行render函数），从而提高效率
 >
+> 优化：如果一个组件它的状态和属性都没有发生变化，重新渲染该组件是没有必要的
+>
+> 我们可能可以手撸 **shouldComponentUpdate(nextProps,nextState)**  比较新旧值（遍历后比较）来优化
+>
+> 但是react提供了 **PureComponent**  
+>
+> 使用：**类组件直接继承PureComponent**
+>
+> PureComponent是一个组件，如果某个组件继承该组件，则该组件的shouldComponentUpdate(nextProps,nextState)会进行优化，对属性和状态进行**浅比较**，如果不相等则不会重新渲染
+
+**注意·**PureComponent进行的是浅比较
+
+1. 为了效率，应该尽量使用pureComponent
+
+2. 要求不要改动之前的状态，永远是创建新的状态覆盖之前的状态（Immutable，不可变对象）
+
+   比如  
+
+   ```jsx
+   //不能  this.state.y = 555  (X)
+   //需要用下面这种方式
+   this.setState({obj:{
+       ...this.state.obj,  //把原来的obj展开
+       y:555,  //对y重新赋值
+   }})
+   ```
+
+   或者用`Object.assigin({},this.state.obj,{y:555})`
+
+3. 有一个第三方库，Immutable.js ，他专门用于制作不可变对象
+
+4. 函数组件，使用**React.memo**函数制作纯组件
+
+   ```JSX
+   function demo(){
+       
+   }
+   
+   export default React.memo(demo)
+   ```
+
+   >**React.memo** 给这个函数传一个函数组件 他会生成一个新的组件（纯组件）将这个组件导出就ok了
+   >
+   >原理也是高阶组件...
+   >
+   >```jsx
+   >function memo(FuccComp){
+   >    return class Memo extends PureComponent 
+   >}
+   >```
+   >
+
+## Protals
+
+>插槽  （和vue插槽完全不一样）
+>
+>将一个React元素渲染到指定的DOM（真实DOM）容器中
+
+```jsx
+function childA(){
+    return <div className="child-a">
+    	<childB></childB>
+    </div>
+}
+
+function childB(){
+     return <div className="child-b">
+    </div>
+}
+
+export function App(){
+     return <div className="app">
+    	<childA></childA>
+    </div>
+}
+```
+
+>正常情况下，我们的这个<childA></childA>组件会渲染到 class为 app的dom中，但此时我想让它渲染到  其他的dom中该怎么做
+>
+>此时我们就可以使用  **ReactDom.createPortal()**
+
+```jsx
+function childA(){
+    return ReactDom.createPortal(
+    <div className="child-a">
+    	<childB></childB>
+    </div>,documentSelector('.,modal'));
+    //两个参数
+    // 1.要渲染的元素结构
+    // 2.要渲染到的真实DOM
+}
+```
+
+> 注意事件冒泡 ：
+>
+> **React中的事件是包装过的，他的事件冒泡是根据虚拟DOM树来冒泡的，与真实的DOM树无关**
+
+
+
+
 
 ## umi.js
 
