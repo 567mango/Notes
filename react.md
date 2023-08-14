@@ -1214,9 +1214,92 @@ function childA(){
 >
 > **React中的事件是包装过的，他的事件冒泡是根据虚拟DOM树来冒泡的，与真实的DOM树无关**
 
+## 错误边界
+
+>默认情况下，若一个组件在**渲染期间（render）**发生错误，会导致整个组件树全部被卸载
+>
+>
+>错误边界：是一个组件，该组件会捕获到渲染期间（render）发生的错误，并有能力阻止错误继续传播
+>
+>**让某个组件捕获错误**
+>
+>
+>
+>1. 生命周期函数 getDerivedStateFromError()
+>
+>   **getDerivedStateFromError()**
+>
+>   1. 静态函数
+>   2. 运行时间的：渲染子组件过程中，发生错误之后，更新页面之前
+>   3.  只有子组件发生错误才会运行该函数
+>   4. 该函数返回一个对象，React会将该对象覆盖掉state
+>   5. 参数：错误对象error
+>   6. 通常用于该函数改变状态
+>
+>   
+>
+>   ```jsx
+>   state:{
+>       hasError:false
+>   }
+>   
+>   static getDerivedStateFromError(){
+>       console.log('发生错误')
+>       //发生错误返回
+>       return {
+>            hasError:true
+>       }
+>   }
+>   render(){
+>       if(this.state.hasError){
+>           return <h1>出现错误了</h1>
+>       }
+>       return this.props.children
+>   }
+>   ```
+>
+>   这样如果出现错误 在**生产环境**下会显示 <h1>出现错误了</h1>
+>
+>2. 生命周期函数 componentDidCatch()
+>
+>   **componentDidCatch()**
+>
+>    componentDidCatch(error,)
+>
+>   1. 实例方法
+>   2. 运行时间点：渲染子组件的过程中，页面更新之后，由于其运行时间点时间比较靠后，所以一般不会在该函数里面改变状态
+>   3. 通常，该函数用于记录错误消息
+>   4. 两个参数，error \ info 
+>
+>   **和上边的用法一样，但是这个不如getDerivedStateFromError 因为它是更新后又重新渲染，浪费性能，通常，该函数用于记录错误消息**
+
+**细节**
+
+某些错误，错误边界组件无法捕捉
+
+1. 自身的错误
+2. 异步的错误
+3. 事件中的错误
+
+**仅处理渲染期间子组件的同步错误**
 
 
 
+## React中的事件
+
+>这里的事件：React内置的DOM组件中的事件
+
+1. 给document注册事件
+2. 几乎所有的元素的事件处理，均在document的事件中处理
+3. 在document的事件处理中，React会根据虚拟DOM完成事件函数的调用
+4. React的时间参数，并非真实的DOM事件参数，是React合成的一个对象，该对象类似于真实的DOM的时间参数
+   1. stopPropagation，阻止事件在虚拟DOM树中冒泡
+
+**注意事项**
+
+1. 如果给真实的DOM注册事件，阻止了事件冒泡，则会导致React的响应时间无法触发
+2. 如果给真实的DOM注册事件，事件会先于React事件运行（事件冒泡，document是事件冒泡最底层）
+3. 通过React的事件中阻止事件冒泡，无法阻止真实的DOM事件
 
 ## umi.js
 
@@ -1232,3 +1315,10 @@ function childA(){
 
   >在pages里面的文件会被自动添加到路由  
 
+### 动态路由：
+
+>我们可以将文件名改成  **[]**   在[]里面写入名字 比如  [id] 
+>
+>然后我们可以页面上对应路径下的页面传入数值  在组件内部可以通过props拿到路由对象
+
+![image-20230805224246169](assets/image-20230805224246169.png)
