@@ -234,7 +234,7 @@ ReactDom.render(<>
 
 #### 类组件传值
 
->传递来的蚕食用构造函数 **constructor**来接受并且调用**super(props)**    
+>传递来的参数用构造函数 **constructor**来接受并且调用**super(props)**    
 >
 >**super(props)**  相当于调用了  this.props = props  将传递来的对象保存在这个对象里面	
 
@@ -322,7 +322,7 @@ calss MyClassComp extends React.Compoent{
 }
 ```
 
-#### **this.setState({})**
+#### this.setState({})
 
 >**this.setState({})**
 >
