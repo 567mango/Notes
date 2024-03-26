@@ -338,7 +338,7 @@ calss MyClassComp extends React.Compoent{
 >  **解决**：避免出错，在**this.setState({})**中使用回调函数获得状态
 >
 >  ```jsx
->  this.,setState({},()=>{
+>  this.,setState(()=>{
 >      //在这里获取最新的状态
 >  })
 >  ```
@@ -348,7 +348,7 @@ calss MyClassComp extends React.Compoent{
 >  **解决**：使用函数的方式得到最新状态
 >
 >  ```jsx
->  this.,setState(cur=>{
+>  this.setState(cur=>{
 >      return {
 >          n:cur.n + 1
 >      }

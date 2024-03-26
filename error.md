@@ -84,4 +84,29 @@ sb= uniapp
 
    
 
-## 5.未完待续
+## 5. An unexpected error occurred: "https:xxxx".
+
+![image-20240125094429243](assets/image-20240125094429243.png)
+
+拉取这个项目后yarn一直报错
+
+![image-20240125094509989](assets/image-20240125094509989.png)
+
+在网上查找之后时因为 【HTTPS 证书验证失败】
+
+解决：
+
+ ```
+ yarn config list
+ ```
+
+![image-20240125094625933](assets/image-20240125094625933.png)
+
+```
+我们将它改为false
+
+yarn config set strict-ssl false
+```
+
+跳过HTTPS证书就可以了
+

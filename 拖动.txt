@@ -1,0 +1,66 @@
+const myAttendanceTable = ref(null);
+// 鼠标滑动的X轴位置
+const position_x = ref(0);
+// 位移记录
+const translateX = ref(0);
+// 差值
+const diffx = ref(0);
+// 开始滑动？
+const watchMousemove = ref(false);
+
+// 鼠标按下
+const myAttendanceTableMouseDown = (e) => {
+    e.preventDefault();
+    watchMousemove.value = true;
+
+    if (!e.pageX) {
+        position_x.value = e.changedTouches[0].screenX;
+    } else {
+        position_x.value = e.pageX;
+    }
+};
+// 移动
+const myAttendanceTableMouseMove = (e) => {
+    // alert("11");
+    // 阻止默认事件
+    // e.preventDefault();
+
+    if (watchMousemove.value) {
+        myAttendanceTable.value.style.transition = `none`;
+        if (!e.pageX) {
+            diffx.value = e.changedTouches[0].screenX - position_x.value;
+        } else {
+            diffx.value = e.pageX - position_x.value;
+        }
+
+        myAttendanceTable.value.style.transform = `translateX(${
+            translateX.value + diffx.value
+        }px)`;
+    }
+};
+// 抬起
+const myAttendanceTableMouseUp = (e) => {
+    // alert("11");
+    watchMousemove.value = false;
+    position_x.value = 0;
+    translateX.value = translateX.value + diffx.value;
+    diffx.value = 0;
+    myAttendanceTable.value.style.transition = `1s`;
+    if (translateX.value > 0) {
+        if (Math.abs(translateX.value) > myAttendanceTable.value.offsetWidth / 2) {
+            translateX.value = 0;
+            myAttendanceTable.value.style.transform = `translateX(0px)`;
+        }
+    } else if (
+        Math.abs(translateX.value) >
+        myAttendanceTable.value.children[0].offsetWidth -
+            myAttendanceTable.value.offsetWidth / 2
+    ) {
+        translateX.value = 0;
+        myAttendanceTable.value.style.transform = `translateX(0px)`;
+    }
+};
+// 鼠标离开
+const myAttendanceTableMouseLeave = () => {
+    myAttendanceTableMouseUp();
+};
