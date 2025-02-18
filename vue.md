@@ -55,4 +55,42 @@ function RefreshAge(){
   - 当 `is` 是字符串，它既可以是 HTML 标签名也可以是组件的注册名。
   - 或者，`is` 也可以直接绑定到组件的定义。
 
- 
+###  watch监听多个对象
+
+![image-20240522152522166](./assets/image-20240522152522166.png)
+
+### 生命周期v2  vs  v3
+
+![image-20240522154226213](./assets/image-20240522154226213.png)
+
+## Vue3
+
+### vue3传递多个修饰符  使用方法
+
+![image-20240522101633812](./assets/image-20240522101633812.png)
+
+![image-20240522101612338](./assets/image-20240522101612338.png)
+
+### 异步组件
+
+#### 定义异步组件
+
+![image-20240522104612408](./assets/image-20240522104612408.png)
+
+#### 延时
+
+![image-20240522104829749](./assets/image-20240522104829749.png)
+
+#### 设置占位组件LoadingComponent
+
+加载中的时候先展示LoadingComponent
+
+![image-20240522105041098](./assets/image-20240522105041098.png)
+
+#### 出错组件ErrorComponent
+
+![image-20240522105412910](./assets/image-20240522105412910.png)
+
+### Teleport 将组件的dom移动到指定位置
+
+![image-20240522111351634](./assets/image-20240522111351634.png)

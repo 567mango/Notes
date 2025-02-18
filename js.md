@@ -233,7 +233,7 @@ class UIGoods {
 
 ## Object
 
-#### Object.entries()
+### Object.entries()
 
 >Object.entries() 方法返回一个给定对象自身可枚举属性的键值对数组。
 >
@@ -461,4 +461,12 @@ Promise.all([
 >
 >1. 被async修饰的函数一定返回Promise
 >2. await表示等待某个promise完成，他必须在async中使用 可以在同步中获取到promise的返回值
+
+## Object
+
+### Object.setPrototypeOf(obj1,obj2)
+
+```
+相当于obj1.__propt__ = obj2
+```
 
