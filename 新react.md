@@ -186,7 +186,7 @@ react使用  props.children 可以实现类似于vue的插槽功能
 
 ## 表单
 
-#### 受控组件
+### 受控组件
 
 ![image-20250221164933617](./assets/image-20250221164933617.png)
 
@@ -198,5 +198,146 @@ react使用  props.children 可以实现类似于vue的插槽功能
 
 `如果想给非受控初始值，需要使用defaultValue赋值`
 
-### react函数组件 
+## 生命周期
 
+![image-20250221183150391](./assets/image-20250221183150391.png)
+
+常用的生命周期钩子函数如下
+
+![image-20250224110059773](./assets/image-20250224110059773.png)
+
+![image-20250224111838198](./assets/image-20250224111838198.png)
+
+![image-20250224112643423](./assets/image-20250224112643423.png)
+
+![image-20250224112657321](./assets/image-20250224112657321.png)
+
+# react函数组件  
+
+## Hooks
+
+`hook是react16.8的新增特性，可以让你在不编写class的情况下使用state以及其他React特性`
+
+hook解决了如下的一些问题
+
+1. 告别令人疑惑的生命周期
+   1. 不同生命周期执行相同的代码（相同的代码有多份
+2. 告别类组件中烦人的this
+   1. 类组件会存在this的指向问题
+3. 告别繁重的类组件，回归前端程序员更熟悉的函数
+
+![image-20250224172558046](./assets/image-20250224172558046.png)
+
+### 使用useState  类似vue3
+
+返回一个设置的state  一个setState的函数，用数组解构出来
+
+```react
+import { useState } from 'react';
+
+
+function App(props) {
+  let [count, setCount] = useState(1);
+
+  function handleClick() {
+    setCount(++count);
+  }
+
+  return (
+    <div className="App" >
+      <h1>{count}</h1>
+      <button onClick={handleClick}>click me</button>
+    </div>
+  )
+}
+
+export default App;
+```
+
+### useEffect
+
+`useEffect会在组件渲染完成后执行`
+
+- 副作用的概念
+
+  ![image-20250224174907174](./assets/image-20250224174907174.png)
+
+![image-20250224175156059](./assets/image-20250224175156059.png)
+
+- useEffect可以返回清理函数
+
+
+
+
+![image-20250224180454526](./assets/image-20250224180454526.png)
+
+![image-20250224180924076](./assets/image-20250224180924076.png)
+
+- 副作用的依赖
+
+
+![image-20250224181032679](./assets/image-20250224181032679.png)
+
+- 依赖项
+
+  ​	第二个参数里面写依赖项，只有当依赖项更新时才会执行该useEffect函数
+
+  ​	没有依赖项的话只执行一次
+
+- 自定义hook
+
+  ![image-20250225140344594](./assets/image-20250225140344594.png)
+
+使用流程
+
+1. 书写你要执行的副作用
+
+   
+
+2. 配置依赖项
+
+# react-router v6
+
+![image-20250225142807665](./assets/image-20250225142807665.png)
+
+![image-20250225171812730](./assets/image-20250225171812730.png)
+
+类似于vue-router中的router入口
+
+根组件需要用BrowserRouter（history模式，也有其他模式的router）包裹起来
+
+![image-20250225171926416](./assets/image-20250225171926416.png)
+
+### 跳转带参数
+
+1.使用useNavigate  hooks进行跳转 
+
+```react
+const navigate = useNavigate()
+```
+
+
+
+![image-20250225180247471](./assets/image-20250225180247471.png)
+
+​	
+
+2.获取页面跳转所带的参数
+
+```react
+const location = useLocation()
+```
+
+ ![image-20250225181247288](./assets/image-20250225181247288.png)
+
+3.动态参数获取
+
+![image-20250225182214628](./assets/image-20250225182214628.png)
+
+![image-20250225182028883](./assets/image-20250225182028883.png)
+
+```react
+const params = useParams()
+```
+
+![image-20250225182143410](./assets/image-20250225182143410.png)
