@@ -308,6 +308,10 @@ export default App;
 
 ![image-20250225171926416](./assets/image-20250225171926416.png)
 
+Hash模式
+
+![image-20250226150536190](./assets/image-20250226150536190.png)
+
 ### 跳转带参数
 
 1.使用useNavigate  hooks进行跳转 
@@ -341,3 +345,116 @@ const params = useParams()
 ```
 
 ![image-20250225182143410](./assets/image-20250225182143410.png)
+
+### 总结
+
+#### 组件
+
+![image-20250226151742762](./assets/image-20250226151742762.png)
+
+#### hooks
+
+![image-20250226152215541](./assets/image-20250226152215541.png)
+
+##### useRoutes
+
+定义routes
+
+![image-20250226154143785](./assets/image-20250226154143785.png)
+
+app.js导入使用
+
+![image-20250226154205335](./assets/image-20250226154205335.png)
+
+##### 嵌套路由
+
+在children中定义
+
+![image-20250226154415563](./assets/image-20250226154415563.png)
+
+使用Outlet
+
+![image-20250226154513792](./assets/image-20250226154513792.png)
+
+默认选中：在children中写，path为空字符，element写  <Navigate replace to="xxx"/>
+
+![image-20250226154642990](./assets/image-20250226154642990.png)
+
+# Redux Toolkit 和 React Redux
+
+`使用`
+
+![image-20250301141748101](./assets/image-20250301141748101.png)
+
+![image-20250301141825332](./assets/image-20250301141825332.png)
+
+```react
+import { createSlice } from '@reduxjs/toolkit';
+
+export const counterSlice = createSlice({
+  name: 'counter',
+  initialState: {
+    value: 0,
+  },
+  reducers: {
+    increment: (state) => {
+      // Redux Toolkit 允许我们在 reducers 中编写 mutating 逻辑。
+      // 它实际上并没有 mutate state 因为它使用了 Immer 库，
+      // 它检测到草稿 state 的变化并产生一个全新的基于这些更改的不可变 state
+      state.value += 1;
+    },
+    decrement: (state) => {
+      state.value -= 1;
+    },
+    incrementByAmount: (state, action) => {
+      state.value += action.payload;
+    },
+  },
+});
+
+// 为每个 case reducer 函数生成 Action creators
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+
+export default counterSlice.reducer;
+```
+
+![image-20250301141849058](./assets/image-20250301141849058.png)
+
+```react
+
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { decrement, increment } from './counterSlice';
+import styles from './Counter.module.css';
+
+export function Counter() {
+  const count = useSelector((state) => state.counter.value);
+  const dispatch = useDispatch();
+
+  return (
+    <div>
+      <div>
+        <button
+          aria-label="Increment value"
+          onClick={() => dispatch(increment())}
+        >
+          Increment
+        </button>
+        <span>{count}</span>
+        <button
+          aria-label="Decrement value"
+          onClick={() => dispatch(decrement())}
+        >
+          Decrement
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+![image-20250301141925136](./assets/image-20250301141925136.png)
+
+# render
+
+![image-20250301143242632](./assets/image-20250301143242632.png)
